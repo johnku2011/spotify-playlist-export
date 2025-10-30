@@ -1,12 +1,13 @@
 {
-  "name": "nextjs",
-  "version": "0.1.0",
+  "name": "spotify-playlist-exporter",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-secret": "node -e \"console.log('NEXTAUTH_SECRET=' + require('crypto').randomBytes(32).toString('base64'))\""
   },
   "dependencies": {
     "next": "16.0.1",
