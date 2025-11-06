@@ -38,8 +38,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ playlists });
   } catch (error) {
     console.error("Error fetching playlists:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to fetch playlists";
+    console.error("Error details:", {
+      message: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
-      { error: "Failed to fetch playlists" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

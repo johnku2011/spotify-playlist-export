@@ -71,6 +71,8 @@ export async function fetchAllPlaylists(
   const playlists: SpotifyPlaylist[] = [];
   let url: string | null = `${SPOTIFY_API_BASE}/me/playlists?limit=50`;
 
+  console.log("Fetching playlists from:", url);
+
   while (url) {
     const response = await fetchWithRetry(url, {
       headers: {
@@ -78,11 +80,20 @@ export async function fetchAllPlaylists(
       },
     });
 
+    console.log("Playlist fetch response status:", response.status);
+
     if (!response.ok) {
-      throw new Error(`Failed to fetch playlists: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error("Spotify API error:", {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText,
+      });
+      throw new Error(`Failed to fetch playlists: ${response.statusText} - ${errorText}`);
     }
 
     const data: SpotifyPlaylistsResponse = await response.json();
+    console.log(`Fetched ${data.items.length} playlists in this batch`);
     playlists.push(...data.items);
     url = data.next;
   }

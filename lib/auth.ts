@@ -32,6 +32,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, account, profile }) {
       // Initial sign in
       if (account && profile) {
+        console.log("JWT callback - Initial sign in:", {
+          hasAccessToken: !!account.access_token,
+          hasRefreshToken: !!account.refresh_token,
+          expiresAt: account.expires_at,
+        });
         return {
           ...token,
           accessToken: account.access_token,
@@ -43,13 +48,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // Return previous token if the access token has not expired yet
       if (Date.now() < (token.accessTokenExpires as number)) {
+        console.log("JWT callback - Token still valid");
         return token;
       }
 
       // Access token has expired, try to refresh it
+      console.log("JWT callback - Token expired, refreshing...");
       return refreshAccessToken(token);
     },
     async session({ session, token }) {
+      console.log("Session callback:", {
+        hasAccessToken: !!token.accessToken,
+        hasError: !!token.error,
+      });
       session.accessToken = token.accessToken as string;
       session.error = token.error as string | undefined;
       session.user = token.user as any;
