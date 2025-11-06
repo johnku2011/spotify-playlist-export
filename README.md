@@ -1,196 +1,141 @@
-# Spotify Playlist Exporter
+# Spotify 播放清單匯出工具
 
-> **[繁體中文](README.zh-TW.md)** | English
+> **繁體中文** ⭐ | [English](README.en.md)
 
-A modern, secure web application to export your Spotify playlists (including Liked Songs) to CSV format with comprehensive track metadata.
+一個現代化、安全的網頁應用程式，讓你可以將 Spotify 播放清單（包含「喜歡的歌曲」）匯出為 CSV 格式，包含完整的曲目資訊。
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-## ✨ Features
+## 功能特色
 
-- 🎵 **Export All Playlists** - Including private, collaborative playlists, and Liked Songs
-- 📊 **Rich Metadata** - Track name, artists, album, duration, popularity, release date, and more
-- ✅ **Selective Export** - Choose specific playlists or export everything at once
-- 🔍 **Search & Filter** - Quickly find playlists with search and sort functionality
-- 🎨 **Modern UI** - Beautiful, responsive design with dark/light mode support
-- 🔒 **Secure** - OAuth 2.0 authentication with automatic token refresh
-- ⚡ **Reliable** - Built-in retry logic and rate limit handling
+- 🎵 **完整播放清單存取** - 匯出所有私人和協作播放清單，包括「喜歡的歌曲」
+- 📊 **豐富的曲目資訊** - 藝人、專輯、發行日期、時長、熱門度等
+- ✅ **選擇性匯出** - 選擇特定播放清單或一次匯出全部
+- 🔍 **搜尋與排序** - 輕鬆尋找和整理播放清單
+- 🎨 **現代化介面** - 精美的響應式設計，自動偵測深色/淺色主題
+- 🔒 **安全驗證** - OAuth 2.0 驗證，自動更新權杖
+- ⚡ **快速且可靠** - 處理大型播放清單，具備重試邏輯和速率限制
 
-## 📋 CSV Output Format
+## CSV 輸出格式
 
-Each exported CSV includes these columns:
+匯出的 CSV 包含以下欄位：
 
-| Column | Description |
-|--------|-------------|
-| `playlist_id` | Spotify playlist ID |
-| `playlist_name` | Playlist name |
-| `playlist_owner` | Owner's display name |
-| `playlist_public` | Public/private status |
-| `track_name` | Song title |
-| `artists` | Artists (semicolon-separated) |
-| `album_name` | Album title |
-| `album_release_date` | Release date |
-| `duration_ms` | Duration in milliseconds |
-| `duration_min` | Duration in MM:SS format |
-| `explicit` | Explicit content flag |
-| `popularity` | Spotify popularity score (0-100) |
-| `added_at` | Date added to playlist |
-| `track_uri` | Spotify track URI |
+| 欄位 | 說明 |
+|------|------|
+| `playlist_id` | Spotify 播放清單 ID（喜歡的歌曲為 `liked-songs`） |
+| `playlist_name` | 播放清單名稱 |
+| `playlist_owner` | 擁有者的顯示名稱 |
+| `playlist_public` | 公開/私人狀態 |
+| `track_name` | 歌曲標題 |
+| `artists` | 藝人（以 ";" 分隔） |
+| `album_name` | 專輯標題 |
+| `album_release_date` | 發行日期 |
+| `duration_ms` | 時長（毫秒） |
+| `duration_min` | 時長（MM:SS 格式） |
+| `explicit` | 清晰內容標記 |
+| `popularity` | Spotify 熱門度分數（0-100） |
+| `added_at` | 曲目加入播放清單的日期 |
+| `track_uri` | Spotify 曲目 URI |
 
-## 🚀 Quick Start
+## 系統需求
 
-### Prerequisites
+- Node.js 18+ 已安裝
+- pnpm 套件管理器
+- Spotify 開發者帳號
 
-- Node.js 18 or higher
-- pnpm (or npm/yarn)
-- Spotify Developer Account
+## 設定步驟
 
-### 1. Create a Spotify App
+### 1. 建立 Spotify 應用程式
 
-1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Click **"Create App"**
-3. Fill in the details:
-   - **App name**: Spotify Playlist Exporter (or your preferred name)
-   - **App description**: Export playlists to CSV
-   - **Redirect URIs**: 
-     - For local development: `http://localhost:3000/api/auth/callback/spotify`
-     - For production: `https://your-domain.com/api/auth/callback/spotify`
-4. Save and copy your **Client ID** and **Client Secret**
+1. 前往 [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+2. 點選「Create App」
+3. 填寫詳細資訊：
+   - **App name**：Spotify Playlist Exporter
+   - **App description**：Export playlists to CSV
+   - **Redirect URI**：
+     - 本機開發：`http://localhost:3000/api/auth/callback/spotify`
+     - 正式環境：`https://your-app.vercel.app/api/auth/callback/spotify`
+   - **API/SDKs**：Web API
+4. 儲存你的應用程式
+5. 複製你的 **Client ID** 和 **Client Secret**
 
-### 2. Install Dependencies
+### 2. 複製專案並安裝套件
 
 ```bash
-git clone https://github.com/yourusername/spotify-playlist-export.git
+# 複製儲存庫
+git clone <your-repo-url>
 cd spotify-playlist-export
+
+# 安裝相依套件
 pnpm install
 ```
 
-### 3. Configure Environment
+### 3. 設定環境變數
 
-Create `.env.local` in the project root:
+在根目錄建立 `.env.local` 檔案：
+
+```bash
+# 複製範例檔案
+cp .env.example .env.local
+```
+
+編輯 `.env.local` 並加入你的憑證：
 
 ```env
-# Spotify API Credentials (from Developer Dashboard)
+# Spotify API 憑證
 SPOTIFY_CLIENT_ID=your_client_id_here
 SPOTIFY_CLIENT_SECRET=your_client_secret_here
 
-# NextAuth Configuration
-NEXTAUTH_SECRET=your_random_secret_here
+# NextAuth 設定
+# 使用以下指令產生：openssl rand -base64 32
+NEXTAUTH_SECRET=your_generated_secret_here
+
+# NextAuth URL
 NEXTAUTH_URL=http://localhost:3000
 ```
 
-Generate a secure `NEXTAUTH_SECRET`:
+產生安全的 `NEXTAUTH_SECRET`：
 
 ```bash
 openssl rand -base64 32
 ```
 
-### 4. Run Development Server
+### 4. 執行開發伺服器
+
+在本機使用 HTTPS 執行應用程式（建議用於 Spotify OAuth）：
 
 ```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+如果遇到 HTTPS 設定問題，可以不使用 SSL 執行：
 
-## 📦 Deployment
+```bash
+pnpm dev:no-ssl
+```
 
-### Deploy to Vercel (Recommended)
+應用程式將在 `https://localhost:3000`（或 `dev:no-ssl` 時為 `http://localhost:3000`）上執行。
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+### 5. 部署到 Vercel
 
-1. Push your code to GitHub
-2. Import the repository in Vercel
-3. Add environment variables in Vercel dashboard:
+1. **連結你的 Git 儲存庫**到 Vercel。
+2. 在 Vercel 專案設定中**新增環境變數**：
    - `SPOTIFY_CLIENT_ID`
    - `SPOTIFY_CLIENT_SECRET`
-   - `NEXTAUTH_SECRET`
-   - `NEXTAUTH_URL` (your Vercel app URL)
-4. Update Spotify redirect URI with your Vercel URL
+   - `NEXTAUTH_SECRET`（為正式環境產生新的）
+   - `NEXTAUTH_URL`（例如：`https://your-app.vercel.app`）
+   - `AUTH_TRUST_HOST`（設定為 `true`）
+3. 確保 Spotify Developer Dashboard 中的 **Redirect URI** 與你的 Vercel 部署網址一致：`https://your-app.vercel.app/api/auth/callback/spotify`
+4. 開始部署！
 
-### Other Platforms
+## 貢獻
 
-This app works on any platform that supports Next.js:
-- Netlify
-- Railway
-- Render
-- Self-hosted with Docker
+歡迎貢獻！請隨時開啟 issue 或提交 pull request。
 
-## 🛠️ Tech Stack
+## 授權
 
-- **Framework**: Next.js 16 (App Router)
-- **UI**: React 19
-- **Language**: TypeScript 5
-- **Authentication**: NextAuth.js v5
-- **Styling**: Tailwind CSS 4
-- **Data Export**: PapaParse
+本專案採用 MIT 授權條款。詳見 [LICENSE](LICENSE) 檔案。
 
-## 📁 Project Structure
-
-```
-├── app/
-│   ├── api/                    # API routes
-│   │   ├── auth/              # NextAuth endpoints
-│   │   ├── playlists/         # Playlist fetching
-│   │   └── export/            # CSV export
-│   ├── components/            # React components
-│   └── page.tsx              # Main app page
-├── lib/
-│   ├── auth.ts               # Authentication config
-│   ├── spotify.ts            # Spotify API wrapper
-│   └── csv.ts                # CSV generation
-└── types/
-    └── spotify.ts            # TypeScript types
-```
-
-## 🔐 Security Features
-
-- ✅ **No data storage** - All exports generated on-demand
-- ✅ **Secure tokens** - Access tokens never exposed to client
-- ✅ **OAuth 2.0** - Standard authentication flow
-- ✅ **HTTPS only** - Secure connections in production
-- ✅ **Environment variables** - Secrets stored securely
-
-## 🎯 Use Cases
-
-- **Backup** - Keep a backup of your Spotify playlists
-- **Analytics** - Analyze your music taste and patterns
-- **Migration** - Move playlists between platforms
-- **Documentation** - Create records of playlist contents
-- **Sharing** - Share playlist data in spreadsheet format
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Spotify Web API](https://developer.spotify.com/documentation/web-api)
-- [NextAuth.js](https://next-auth.js.org/)
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-
-## ⚠️ Disclaimer
-
-This application is not affiliated with, endorsed by, or sponsored by Spotify. It uses the official Spotify Web API for all data access.
-
-## 📧 Support
-
-If you have any questions or issues, please open an issue on GitHub.
-
----
-
-Made with ❤️ by the community
