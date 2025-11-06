@@ -15,16 +15,22 @@
 
 # next.js
 /.next/
-/.pnpm-store/
 /out/
+
+# pnpm
+.pnpm-store/
+node_modules/
 
 # production
 /build
-/document/requirement.md
 
 # misc
 .DS_Store
 *.pem
+*.py
+
+# temp files
+server.js
 
 # debug
 npm-debug.log*
