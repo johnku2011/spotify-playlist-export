@@ -10,6 +10,9 @@ export interface SpotifyUser {
   external_urls: {
     spotify: string;
   };
+  href: string;
+  type: string;
+  uri: string;
 }
 
 export interface SpotifyPlaylist {
@@ -27,6 +30,10 @@ export interface SpotifyPlaylist {
   external_urls: {
     spotify: string;
   };
+  href: string;
+  snapshot_id: string;
+  type: string;
+  uri: string;
 }
 
 export interface SpotifyArtist {
