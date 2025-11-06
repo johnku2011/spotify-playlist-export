@@ -1,5 +1,7 @@
 # Spotify Playlist Exporter
 
+> **[繁體中文](README.zh-TW.md)** | English
+
 A modern, secure web application to export your Spotify playlists (including Liked Songs) to CSV format with comprehensive track metadata.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
