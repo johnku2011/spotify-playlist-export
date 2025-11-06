@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "t.scdn.co",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
         hostname: "*.spotifycdn.com",
       },
     ],

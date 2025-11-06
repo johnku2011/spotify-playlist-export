@@ -78,9 +78,9 @@ export async function GET(request: NextRequest) {
             },
             images: [
               {
-                url: "https://misc.scdn.co/liked-songs/liked-songs-640.png",
-                height: 640,
-                width: 640,
+                url: "https://t.scdn.co/images/3099b3803ad9496896c43f22fe9be8c4.png",
+                height: 300,
+                width: 300,
               },
             ],
             external_urls: {
