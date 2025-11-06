@@ -93,8 +93,13 @@ export async function fetchAllPlaylists(
     }
 
     const data: SpotifyPlaylistsResponse = await response.json();
-    console.log(`Fetched ${data.items.length} playlists in this batch`);
-    playlists.push(...data.items);
+    console.log("Spotify API response:", JSON.stringify(data, null, 2));
+    console.log(`Fetched ${data.items?.length || 0} playlists in this batch`);
+    console.log(`Total in response: ${data.total}, Limit: ${data.limit}, Offset: ${data.offset}`);
+    
+    if (data.items && data.items.length > 0) {
+      playlists.push(...data.items);
+    }
     url = data.next;
   }
 

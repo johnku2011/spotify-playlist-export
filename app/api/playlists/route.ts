@@ -11,6 +11,8 @@ export async function GET(request: NextRequest) {
       hasAccessToken: !!session?.accessToken,
       error: session?.error,
       userEmail: session?.user?.email,
+      userId: session?.user?.id,
+      userName: session?.user?.name,
     });
 
     if (!session || !session.accessToken) {
