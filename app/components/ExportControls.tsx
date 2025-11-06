@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface ExportControlsProps {
   selectedCount: number;
@@ -11,6 +12,7 @@ export default function ExportControls({
   selectedCount,
   onExport,
 }: ExportControlsProps) {
+  const { t } = useLanguage();
   const [isExporting, setIsExporting] = useState(false);
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -42,13 +44,13 @@ export default function ExportControls({
         <div className="text-center sm:text-left">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             {selectedCount === 0 ? (
-              "No playlists selected"
+              t("export.selectToExport")
             ) : (
               <>
                 <span className="font-semibold text-zinc-900 dark:text-zinc-100">
                   {selectedCount}
                 </span>{" "}
-                playlist{selectedCount !== 1 ? "s" : ""} selected
+                {t("export.playlists")}
               </>
             )}
           </p>
@@ -72,7 +74,7 @@ export default function ExportControls({
               ? "bg-zinc-300 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-500 cursor-not-allowed"
               : "bg-green-600 text-white hover:bg-green-700 hover:shadow-lg active:scale-95"
           }`}
-          aria-label="Export to CSV"
+          aria-label={t("export.export")}
         >
           {isExporting ? (
             <span className="flex items-center gap-2">
@@ -96,10 +98,10 @@ export default function ExportControls({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-              Exporting...
+              {t("export.export")}...
             </span>
           ) : (
-            "Export to CSV"
+            t("export.export")
           )}
         </button>
       </div>

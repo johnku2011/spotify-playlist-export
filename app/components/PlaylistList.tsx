@@ -3,6 +3,7 @@
 import { SpotifyPlaylist } from "@/types/spotify";
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface PlaylistListProps {
   playlists: SpotifyPlaylist[];
@@ -18,6 +19,7 @@ export default function PlaylistList({
   selectedPlaylists,
   onSelectionChange,
 }: PlaylistListProps) {
+  const { t } = useLanguage();
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,7 +74,7 @@ export default function PlaylistList({
     return (
       <div className="text-center py-12">
         <p className="text-xl text-zinc-600 dark:text-zinc-400">
-          No playlists found
+          {t("playlist.noPlaylists")}
         </p>
       </div>
     );
@@ -85,11 +87,11 @@ export default function PlaylistList({
         {/* Search */}
         <input
           type="text"
-          placeholder="Search playlists..."
+          placeholder={t("playlist.search")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
-          aria-label="Search playlists"
+          aria-label={t("playlist.search")}
         />
 
         {/* Sort and Select All */}
@@ -98,16 +100,16 @@ export default function PlaylistList({
             <button
               onClick={() => handleSort("name")}
               className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-sm font-medium"
-              aria-label="Sort by name"
+              aria-label={t("playlist.sortBy.name")}
             >
-              Name {sortKey === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+              {t("playlist.sortBy.name")} {sortKey === "name" && (sortOrder === "asc" ? "↑" : "↓")}
             </button>
             <button
               onClick={() => handleSort("tracks")}
               className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors text-sm font-medium"
-              aria-label="Sort by track count"
+              aria-label={t("playlist.sortBy.tracks")}
             >
-              Tracks {sortKey === "tracks" && (sortOrder === "asc" ? "↑" : "↓")}
+              {t("playlist.sortBy.tracks")} {sortKey === "tracks" && (sortOrder === "asc" ? "↑" : "↓")}
             </button>
           </div>
           <button
@@ -115,13 +117,13 @@ export default function PlaylistList({
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
             aria-label={
               selectedPlaylists.length === sortedPlaylists.length
-                ? "Deselect all"
-                : "Select all"
+                ? t("export.deselectAll")
+                : t("export.selectAll")
             }
           >
             {selectedPlaylists.length === sortedPlaylists.length
-              ? "Deselect All"
-              : "Select All"}
+              ? t("export.deselectAll")
+              : t("export.selectAll")}
           </button>
         </div>
       </div>
@@ -192,11 +194,11 @@ export default function PlaylistList({
                   {playlist.name}
                 </h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 truncate mb-2">
-                  by {playlist.owner.display_name}
+                  {t("playlist.by")} {playlist.owner.display_name}
                 </p>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-zinc-500 dark:text-zinc-500">
-                    {playlist.tracks.total} tracks
+                    {playlist.tracks.total} {t("playlist.tracks")}
                   </span>
                   <span
                     className={`px-2 py-1 rounded ${
@@ -205,7 +207,7 @@ export default function PlaylistList({
                         : "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200"
                     }`}
                   >
-                    {playlist.public ? "Public" : "Private"}
+                    {playlist.public ? t("playlist.public") : t("playlist.private")}
                   </span>
                 </div>
               </div>

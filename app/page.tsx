@@ -6,10 +6,13 @@ import Image from "next/image";
 import PlaylistList from "./components/PlaylistList";
 import ExportControls from "./components/ExportControls";
 import LoadingSkeleton from "./components/LoadingSkeleton";
+import LanguageToggle from "./components/LanguageToggle";
 import { SpotifyPlaylist } from "@/types/spotify";
+import { useLanguage } from "./contexts/LanguageContext";
 
 export default function Home() {
   const { data: session, status } = useSession();
+  const { t } = useLanguage();
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +86,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black">
         <div className="text-center">
           <div className="animate-spin h-12 w-12 border-4 border-green-500 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-zinc-600 dark:text-zinc-400">Loading...</p>
+          <p className="text-zinc-600 dark:text-zinc-400">{t("main.loading")}</p>
         </div>
       </div>
     );
@@ -91,9 +94,14 @@ export default function Home() {
 
   // Not authenticated
   if (!session) {
-  return (
+    return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-900 dark:via-green-800 dark:to-black p-4">
-        <div className="max-w-3xl w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl p-8 md:p-12 text-center">
+        <div className="max-w-3xl w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl p-8 md:p-12 text-center relative">
+          {/* Language Toggle - Top Right */}
+          <div className="absolute top-6 right-6">
+            <LanguageToggle />
+          </div>
+
           <div className="mb-10">
             <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <svg
@@ -105,15 +113,15 @@ export default function Home() {
               </svg>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 leading-tight">
-              一鍵匯出 Spotify 播放清單為 CSV
-          </h1>
+              {t("landing.title")}
+            </h1>
             <p className="text-xl text-zinc-600 dark:text-zinc-400 mb-3 font-medium">
-              備份歌單 · 轉移 Apple Music / YouTube Music · 分析聽歌習慣
+              {t("landing.subtitle")}
             </p>
             <p className="text-sm text-zinc-500 dark:text-zinc-500">
-              Export your Spotify playlists to CSV format with complete metadata
-          </p>
-        </div>
+              {t("landing.subtitle.en")}
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-4 mb-10">
             <div className="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-5 text-left">
@@ -122,8 +130,8 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
-              <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">支援「喜歡的歌曲」</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">所有私人、協作播放清單及「Liked Songs」完整匯出</p>
+              <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">{t("landing.feature1.title")}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("landing.feature1.desc")}</p>
             </div>
             
             <div className="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-5 text-left">
@@ -132,8 +140,8 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">完整資訊</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">藝人、專輯、發行日期、時長、熱門度等詳細資料</p>
+              <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">{t("landing.feature2.title")}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("landing.feature2.desc")}</p>
             </div>
             
             <div className="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-5 text-left">
@@ -142,8 +150,8 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">隱私保護</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">不儲存任何資料，匯出即時完成</p>
+              <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 mb-2">{t("landing.feature3.title")}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("landing.feature3.desc")}</p>
             </div>
           </div>
 
@@ -154,14 +162,14 @@ export default function Home() {
             <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
             </svg>
-            立即登入 Spotify 匯出
+            {t("landing.cta")}
           </button>
 
           <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 dark:text-zinc-600">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            <span>匯出即時完成，資料僅在你的瀏覽器處理</span>
+            <span>{t("landing.privacy")}</span>
           </div>
 
           <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800">
@@ -170,25 +178,25 @@ export default function Home() {
                 <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>免費使用</span>
+                <span>{t("landing.free")}</span>
               </div>
               <div className="flex items-center gap-1">
                 <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>無廣告</span>
+                <span>{t("landing.noAds")}</span>
               </div>
               <div className="flex items-center gap-1">
                 <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>開源專案</span>
+                <span>{t("landing.openSource")}</span>
               </div>
               <div className="flex items-center gap-1">
                 <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>不限次數</span>
+                <span>{t("landing.unlimited")}</span>
               </div>
             </div>
           </div>
@@ -211,17 +219,18 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
-                Spotify Playlist Exporter
+                {t("header.title")}
               </h1>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                {playlists.length} playlists available
+                {playlists.length} {t("header.playlists")}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
+            <LanguageToggle />
             {session.user?.image && (
-            <Image
+              <Image
                 src={session.user.image}
                 alt={session.user.name || "User"}
                 width={40}
@@ -240,9 +249,9 @@ export default function Home() {
             <button
               onClick={() => signOut()}
               className="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-              aria-label="Sign out"
+              aria-label={t("header.signOut")}
             >
-              Sign Out
+              {t("header.signOut")}
             </button>
           </div>
         </div>
