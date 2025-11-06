@@ -27,13 +27,23 @@ export default function Home() {
 
     try {
       const response = await fetch("/api/playlists");
+      
       if (!response.ok) {
-        throw new Error("Failed to fetch playlists");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Failed to fetch playlists:", {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData,
+        });
+        throw new Error(errorData.error || `Failed to fetch playlists (${response.status})`);
       }
+      
       const data = await response.json();
-      setPlaylists(data.playlists);
+      console.log("Playlists fetched:", data.playlists?.length || 0);
+      setPlaylists(data.playlists || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch playlists");
+      const errorMessage = err instanceof Error ? err.message : "Failed to fetch playlists";
+      setError(errorMessage);
       console.error("Error fetching playlists:", err);
     } finally {
       setIsLoading(false);
