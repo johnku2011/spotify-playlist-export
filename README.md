@@ -1,96 +1,86 @@
 # Spotify Playlist Exporter
 
-A modern web application that allows you to export your Spotify playlists to CSV format with comprehensive track metadata. Built with Next.js 16, React 19, and NextAuth.js.
+A modern, secure web application to export your Spotify playlists (including Liked Songs) to CSV format with comprehensive track metadata.
 
-## Features
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-- 🎵 **Complete Playlist Access** - Export all your private and collaborative playlists
-- 📊 **Rich Track Metadata** - Artists, albums, release dates, duration, popularity, and more
-- ✅ **Selective Export** - Choose specific playlists or export them all at once
-- 🔍 **Search & Sort** - Find and organize playlists easily
-- 🎨 **Modern UI** - Beautiful, responsive design with automatic dark/light theme detection
-- 🔒 **Secure Authentication** - OAuth 2.0 with automatic token refresh
-- ⚡ **Fast & Reliable** - Handles large playlists with retry logic and rate limiting
+## ✨ Features
 
-## CSV Output Format
+- 🎵 **Export All Playlists** - Including private, collaborative playlists, and Liked Songs
+- 📊 **Rich Metadata** - Track name, artists, album, duration, popularity, release date, and more
+- ✅ **Selective Export** - Choose specific playlists or export everything at once
+- 🔍 **Search & Filter** - Quickly find playlists with search and sort functionality
+- 🎨 **Modern UI** - Beautiful, responsive design with dark/light mode support
+- 🔒 **Secure** - OAuth 2.0 authentication with automatic token refresh
+- ⚡ **Reliable** - Built-in retry logic and rate limit handling
 
-The exported CSV includes the following columns:
+## 📋 CSV Output Format
+
+Each exported CSV includes these columns:
 
 | Column | Description |
 |--------|-------------|
 | `playlist_id` | Spotify playlist ID |
-| `playlist_name` | Name of the playlist |
+| `playlist_name` | Playlist name |
 | `playlist_owner` | Owner's display name |
 | `playlist_public` | Public/private status |
 | `track_name` | Song title |
-| `artists` | Artists (joined by ";") |
+| `artists` | Artists (semicolon-separated) |
 | `album_name` | Album title |
 | `album_release_date` | Release date |
 | `duration_ms` | Duration in milliseconds |
 | `duration_min` | Duration in MM:SS format |
 | `explicit` | Explicit content flag |
 | `popularity` | Spotify popularity score (0-100) |
-| `added_at` | Date track was added to playlist |
+| `added_at` | Date added to playlist |
 | `track_uri` | Spotify track URI |
 
-## Prerequisites
+## 🚀 Quick Start
 
-- Node.js 18+ installed
-- pnpm package manager
+### Prerequisites
+
+- Node.js 18 or higher
+- pnpm (or npm/yarn)
 - Spotify Developer Account
-
-## Setup Instructions
 
 ### 1. Create a Spotify App
 
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Click "Create App"
+2. Click **"Create App"**
 3. Fill in the details:
-   - **App name**: Spotify Playlist Exporter
+   - **App name**: Spotify Playlist Exporter (or your preferred name)
    - **App description**: Export playlists to CSV
-   - **Redirect URI**: 
-     - For local: `http://localhost:3000/api/auth/callback/spotify`
-     - For production: `https://your-app.vercel.app/api/auth/callback/spotify`
-   - **API/SDKs**: Web API
-4. Save your app
-5. Copy your **Client ID** and **Client Secret**
+   - **Redirect URIs**: 
+     - For local development: `http://localhost:3000/api/auth/callback/spotify`
+     - For production: `https://your-domain.com/api/auth/callback/spotify`
+4. Save and copy your **Client ID** and **Client Secret**
 
-### 2. Clone and Install
+### 2. Install Dependencies
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/yourusername/spotify-playlist-export.git
 cd spotify-playlist-export
-
-# Install dependencies
 pnpm install
 ```
 
-### 3. Configure Environment Variables
+### 3. Configure Environment
 
-Create a `.env.local` file in the root directory:
-
-```bash
-# Copy the example file
-cp .env.example .env.local
-```
-
-Edit `.env.local` and add your credentials:
+Create `.env.local` in the project root:
 
 ```env
-# Spotify API Credentials
+# Spotify API Credentials (from Developer Dashboard)
 SPOTIFY_CLIENT_ID=your_client_id_here
 SPOTIFY_CLIENT_SECRET=your_client_secret_here
 
 # NextAuth Configuration
-# Generate with: openssl rand -base64 32
-NEXTAUTH_SECRET=your_generated_secret_here
-
-# NextAuth URL
+NEXTAUTH_SECRET=your_random_secret_here
 NEXTAUTH_URL=http://localhost:3000
 ```
 
-To generate a secure `NEXTAUTH_SECRET`:
+Generate a secure `NEXTAUTH_SECRET`:
 
 ```bash
 openssl rand -base64 32
@@ -104,139 +94,101 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deployment to Vercel
+## 📦 Deployment
 
-### 1. Deploy to Vercel
+### Deploy to Vercel (Recommended)
 
-```bash
-# Install Vercel CLI
-pnpm add -g vercel
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-# Deploy
-vercel
-```
-
-Or connect your GitHub repository to Vercel for automatic deployments.
-
-### 2. Configure Environment Variables in Vercel
-
-1. Go to your Vercel project dashboard
-2. Navigate to **Settings** → **Environment Variables**
-3. Add the following variables:
+1. Push your code to GitHub
+2. Import the repository in Vercel
+3. Add environment variables in Vercel dashboard:
    - `SPOTIFY_CLIENT_ID`
    - `SPOTIFY_CLIENT_SECRET`
    - `NEXTAUTH_SECRET`
-   - `NEXTAUTH_URL` (set to your production URL, e.g., `https://your-app.vercel.app`)
+   - `NEXTAUTH_URL` (your Vercel app URL)
+4. Update Spotify redirect URI with your Vercel URL
 
-### 3. Update Spotify Redirect URI
+### Other Platforms
 
-1. Go back to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Edit your app
-3. Add your production redirect URI: `https://your-app.vercel.app/api/auth/callback/spotify`
-4. Save changes
+This app works on any platform that supports Next.js:
+- Netlify
+- Railway
+- Render
+- Self-hosted with Docker
 
-## Usage
-
-1. **Sign In**: Click "Connect to Spotify" and authorize the app
-2. **Browse Playlists**: View all your playlists with cover art and metadata
-3. **Search & Sort**: Find playlists by name or sort by track count
-4. **Select Playlists**: Click on playlists to select them for export
-5. **Export**: Click "Export to CSV" to download your data
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 - **Framework**: Next.js 16 (App Router)
-- **React**: 19.2.0
-- **Authentication**: NextAuth.js 5.0 (beta)
+- **UI**: React 19
+- **Language**: TypeScript 5
+- **Authentication**: NextAuth.js v5
 - **Styling**: Tailwind CSS 4
-- **CSV Generation**: PapaParse
-- **API**: Spotify Web API
-- **Deployment**: Vercel
+- **Data Export**: PapaParse
 
-## API Routes
+## 📁 Project Structure
 
-- `GET /api/playlists` - Fetch all user playlists
-- `GET /api/playlists/[id]/tracks` - Fetch tracks for a specific playlist
-- `POST /api/export` - Export selected playlists to CSV
-
-## Required Spotify Scopes
-
-- `playlist-read-private` - Read private playlists
-- `playlist-read-collaborative` - Read collaborative playlists
-- `user-read-private` - Access user profile
-- `user-read-email` - Access user email
-
-## Features in Detail
-
-### Automatic Token Refresh
-
-The app automatically refreshes your Spotify access token when it expires, ensuring uninterrupted access.
-
-### Rate Limiting & Retry Logic
-
-Built-in exponential backoff retry logic handles Spotify's rate limits and temporary failures gracefully.
-
-### Large Playlist Support
-
-The app handles playlists with thousands of tracks through efficient pagination and streaming.
-
-### Accessibility
-
-- WCAG 2.1 AA compliant
-- Full keyboard navigation support
-- ARIA labels for screen readers
-- Responsive design for all devices
-
-## Troubleshooting
-
-### "Invalid redirect URI" error
-
-- Ensure the redirect URI in your Spotify app matches exactly with your `NEXTAUTH_URL`
-- Check that you've added `/api/auth/callback/spotify` to the end
-
-### Authentication fails
-
-- Verify your `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` are correct
-- Ensure `NEXTAUTH_SECRET` is set and properly generated
-- Check that your Spotify app has the correct redirect URIs
-
-### No playlists showing
-
-- Verify you've granted all required permissions during sign-in
-- Try signing out and signing in again
-- Check browser console for error messages
-
-## Development
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run development server
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Start production server
-pnpm start
-
-# Run linter
-pnpm lint
+```
+├── app/
+│   ├── api/                    # API routes
+│   │   ├── auth/              # NextAuth endpoints
+│   │   ├── playlists/         # Playlist fetching
+│   │   └── export/            # CSV export
+│   ├── components/            # React components
+│   └── page.tsx              # Main app page
+├── lib/
+│   ├── auth.ts               # Authentication config
+│   ├── spotify.ts            # Spotify API wrapper
+│   └── csv.ts                # CSV generation
+└── types/
+    └── spotify.ts            # TypeScript types
 ```
 
-## License
+## 🔐 Security Features
 
-MIT License - feel free to use this project for personal or commercial purposes.
+- ✅ **No data storage** - All exports generated on-demand
+- ✅ **Secure tokens** - Access tokens never exposed to client
+- ✅ **OAuth 2.0** - Standard authentication flow
+- ✅ **HTTPS only** - Secure connections in production
+- ✅ **Environment variables** - Secrets stored securely
 
-## Contributing
+## 🎯 Use Cases
+
+- **Backup** - Keep a backup of your Spotify playlists
+- **Analytics** - Analyze your music taste and patterns
+- **Migration** - Move playlists between platforms
+- **Documentation** - Create records of playlist contents
+- **Sharing** - Share playlist data in spreadsheet format
+
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Support
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-For issues or questions, please open an issue on GitHub.
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api)
+- [NextAuth.js](https://next-auth.js.org/)
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+## ⚠️ Disclaimer
+
+This application is not affiliated with, endorsed by, or sponsored by Spotify. It uses the official Spotify Web API for all data access.
+
+## 📧 Support
+
+If you have any questions or issues, please open an issue on GitHub.
 
 ---
 
-Made with ❤️ using Spotify Web API
+Made with ❤️ by the community

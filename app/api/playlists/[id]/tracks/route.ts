@@ -28,7 +28,6 @@ export async function GET(
     // Check if this is the special "liked-songs" ID
     let tracks;
     if (playlistId === "liked-songs") {
-      console.log("Fetching liked songs (saved tracks)");
       tracks = await fetchSavedTracks(session.accessToken);
     } else {
       tracks = await fetchPlaylistTracks(session.accessToken, playlistId);
@@ -36,7 +35,6 @@ export async function GET(
 
     return NextResponse.json({ tracks });
   } catch (error) {
-    console.error("Error fetching playlist tracks:", error);
     return NextResponse.json(
       { error: "Failed to fetch playlist tracks" },
       { status: 500 }

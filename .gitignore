@@ -27,10 +27,10 @@ node_modules/
 # misc
 .DS_Store
 *.pem
-*.py
 
-# temp files
-server.js
+# local HTTPS certificates
+*.key
+*.crt
 
 # debug
 npm-debug.log*

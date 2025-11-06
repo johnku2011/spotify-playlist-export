@@ -90,7 +90,6 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error exporting playlists:", error);
     return NextResponse.json(
       { error: "Failed to export playlists" },
       { status: 500 }

@@ -71,8 +71,6 @@ export async function fetchAllPlaylists(
   const playlists: SpotifyPlaylist[] = [];
   let url: string | null = `${SPOTIFY_API_BASE}/me/playlists?limit=50`;
 
-  console.log("Fetching playlists from:", url);
-
   while (url) {
     const response = await fetchWithRetry(url, {
       headers: {
@@ -80,22 +78,12 @@ export async function fetchAllPlaylists(
       },
     });
 
-    console.log("Playlist fetch response status:", response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Spotify API error:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorText,
-      });
       throw new Error(`Failed to fetch playlists: ${response.statusText} - ${errorText}`);
     }
 
     const data: SpotifyPlaylistsResponse = await response.json();
-    console.log("Spotify API response:", JSON.stringify(data, null, 2));
-    console.log(`Fetched ${data.items?.length || 0} playlists in this batch`);
-    console.log(`Total in response: ${data.total}, Limit: ${data.limit}, Offset: ${data.offset}`);
     
     if (data.items && data.items.length > 0) {
       playlists.push(...data.items);
@@ -171,8 +159,6 @@ export async function fetchSavedTracks(
   const tracks: SpotifyPlaylistTrack[] = [];
   let url: string | null = `${SPOTIFY_API_BASE}/me/tracks?limit=50`;
 
-  console.log("Fetching saved tracks from:", url);
-
   while (url) {
     const response = await fetchWithRetry(url, {
       headers: {
@@ -180,20 +166,12 @@ export async function fetchSavedTracks(
       },
     });
 
-    console.log("Saved tracks fetch response status:", response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Spotify API error fetching saved tracks:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorText,
-      });
       throw new Error(`Failed to fetch saved tracks: ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
-    console.log(`Fetched ${data.items?.length || 0} saved tracks in this batch`);
     
     // Transform saved tracks to match playlist track structure
     if (data.items && data.items.length > 0) {
@@ -209,7 +187,6 @@ export async function fetchSavedTracks(
     url = data.next;
   }
 
-  console.log(`Total saved tracks fetched: ${tracks.length}`);
   return tracks;
 }
 
