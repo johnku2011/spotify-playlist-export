@@ -8,12 +8,20 @@ const SPOTIFY_SCOPES = [
   "user-read-email",
 ].join(" ");
 
+// Debug: Check if env vars are loaded
+console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+console.log("SPOTIFY_CLIENT_ID exists:", !!process.env.SPOTIFY_CLIENT_ID);
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
+  basePath: "/api/auth",
+  debug: true,
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID!,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
       authorization: {
+        url: "https://accounts.spotify.com/authorize",
         params: {
           scope: SPOTIFY_SCOPES,
         },

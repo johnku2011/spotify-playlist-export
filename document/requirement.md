@@ -101,3 +101,4 @@ No playlists: "No playlists found."
 
 
 CategoryRequirementPerformanceExport <500 tracks: <10s; >5k tracks: <2min (with progress). Handle 50 playlists.SecurityTokens never exposed client-side. HTTPS only. PKCE for auth.UsabilityResponsive (mobile/desktop). Dark/Light theme. <3 clicks to export.AccessibilityWCAG 2.1 AA: Alt text, keyboard nav, ARIA labels.Reliability99% uptime. Retry logic for API calls (exponential backoff).ScalabilityServerless (e.g., Vercel); no DB needed.
+

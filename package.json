@@ -1,13 +1,13 @@
 {
-  "name": "spotify-playlist-exporter",
-  "version": "1.0.0",
+  "name": "nextjs",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
+    "dev:no-ssl": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "generate-secret": "node -e \"console.log('NEXTAUTH_SECRET=' + require('crypto').randomBytes(32).toString('base64'))\""
+    "lint": "eslint"
   },
   "dependencies": {
     "next": "16.0.1",
@@ -24,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
+    "mkcert": "^3.2.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
