@@ -162,3 +162,54 @@ export async function fetchPlaylist(
   return response.json();
 }
 
+/**
+ * Fetch user's saved tracks (Liked Songs) with pagination
+ */
+export async function fetchSavedTracks(
+  accessToken: string
+): Promise<SpotifyPlaylistTrack[]> {
+  const tracks: SpotifyPlaylistTrack[] = [];
+  let url: string | null = `${SPOTIFY_API_BASE}/me/tracks?limit=50`;
+
+  console.log("Fetching saved tracks from:", url);
+
+  while (url) {
+    const response = await fetchWithRetry(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    console.log("Saved tracks fetch response status:", response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Spotify API error fetching saved tracks:", {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText,
+      });
+      throw new Error(`Failed to fetch saved tracks: ${response.statusText} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log(`Fetched ${data.items?.length || 0} saved tracks in this batch`);
+    
+    // Transform saved tracks to match playlist track structure
+    if (data.items && data.items.length > 0) {
+      const transformedTracks = data.items.map((item: any) => ({
+        added_at: item.added_at,
+        added_by: null, // Saved tracks don't have an added_by field
+        is_local: false,
+        track: item.track,
+      }));
+      tracks.push(...transformedTracks);
+    }
+    
+    url = data.next;
+  }
+
+  console.log(`Total saved tracks fetched: ${tracks.length}`);
+  return tracks;
+}
+

@@ -6,6 +6,7 @@ const SPOTIFY_SCOPES = [
   "playlist-read-collaborative",
   "user-read-private",
   "user-read-email",
+  "user-library-read", // For accessing liked songs
 ].join(" ");
 
 // Debug: Check if env vars are loaded

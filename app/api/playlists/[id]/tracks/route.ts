@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { fetchPlaylistTracks } from "@/lib/spotify";
+import { fetchPlaylistTracks, fetchSavedTracks } from "@/lib/spotify";
 
 export async function GET(
   request: NextRequest,
@@ -24,7 +24,15 @@ export async function GET(
     }
 
     const { id: playlistId } = await params;
-    const tracks = await fetchPlaylistTracks(session.accessToken, playlistId);
+    
+    // Check if this is the special "liked-songs" ID
+    let tracks;
+    if (playlistId === "liked-songs") {
+      console.log("Fetching liked songs (saved tracks)");
+      tracks = await fetchSavedTracks(session.accessToken);
+    } else {
+      tracks = await fetchPlaylistTracks(session.accessToken, playlistId);
+    }
 
     return NextResponse.json({ tracks });
   } catch (error) {
