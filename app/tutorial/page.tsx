@@ -2,9 +2,16 @@
 
 import { useLanguage } from "../contexts/LanguageContext";
 import Link from "next/link";
+import { useEffect } from "react";
+import * as gtag from "@/lib/gtag";
 
 export default function TutorialPage() {
   const { t } = useLanguage();
+
+  // Track page view
+  useEffect(() => {
+    gtag.trackViewTutorial();
+  }, []);
 
   const faqSchema = {
     "@context": "https://schema.org",

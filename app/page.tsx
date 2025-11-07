@@ -10,6 +10,7 @@ import LoadingSkeleton from "./components/LoadingSkeleton";
 import LanguageToggle from "./components/LanguageToggle";
 import { SpotifyPlaylist } from "@/types/spotify";
 import { useLanguage } from "./contexts/LanguageContext";
+import * as gtag from "@/lib/gtag";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -79,6 +80,9 @@ export default function Home() {
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+
+    // Track download event in GA
+    gtag.trackDownloadCSV(selectedPlaylists.length);
   };
 
   // Loading state
@@ -157,7 +161,12 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() => signIn("spotify")}
+            onClick={() => {
+              // Track GA4 event
+              gtag.trackConnectSpotify();
+              // Original login logic
+              signIn("spotify");
+            }}
             className="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-5 px-8 rounded-xl transition-all hover:shadow-xl hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 mb-4"
           >
             <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">

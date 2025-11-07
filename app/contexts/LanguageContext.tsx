@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import * as gtag from "@/lib/gtag";
 
 type Language = "zh-TW" | "en";
 
@@ -131,6 +132,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("language", lang);
     // Update html lang attribute
     document.documentElement.lang = lang;
+    // Track language switch in GA
+    gtag.trackLanguageSwitch(lang);
   };
 
   const t = (key: string): string => {
