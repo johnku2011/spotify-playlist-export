@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
+import { JWT } from "next-auth/jwt";
 
 const SPOTIFY_SCOPES = [
   "playlist-read-private",
@@ -25,7 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile }): Promise<JWT> {
       // Initial sign in
       if (account && profile) {
         return {
@@ -33,8 +34,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
           accessTokenExpires: account.expires_at! * 1000, // Convert to milliseconds
-          user: profile,
-        };
+          user: profile as any,
+        } as JWT;
       }
 
       // Return previous token if the access token has not expired yet
@@ -48,7 +49,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
       session.error = token.error as string | undefined;
-      session.user = token.user as any;
+      if (token.user) {
+        session.user = {
+          ...session.user,
+          id: token.user.id,
+          name: token.user.display_name,
+          email: token.user.email,
+          image: token.user.images?.[0]?.url,
+        };
+      }
       return session;
     },
   },
@@ -60,7 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 /**
  * Refresh the access token using the refresh token
  */
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     const url = "https://accounts.spotify.com/api/token";
     const basicAuth = Buffer.from(
@@ -75,7 +84,7 @@ async function refreshAccessToken(token: any) {
       },
       body: new URLSearchParams({
         grant_type: "refresh_token",
-        refresh_token: token.refreshToken,
+        refresh_token: token.refreshToken as string,
       }),
     });
 
@@ -92,7 +101,9 @@ async function refreshAccessToken(token: any) {
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
     };
   } catch (error) {
-    console.error("Error refreshing access token:", error);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error refreshing access token:", error);
+    }
     return {
       ...token,
       error: "RefreshAccessTokenError",

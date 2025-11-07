@@ -33,7 +33,9 @@ async function fetchWithRetry(
           ? parseInt(retryAfter) * 1000
           : initialDelay * Math.pow(2, attempt);
 
-        console.log(`Rate limited. Retrying after ${delay}ms...`);
+        if (process.env.NODE_ENV === "development") {
+          console.log(`Rate limited. Retrying after ${delay}ms...`);
+        }
         await new Promise((resolve) => setTimeout(resolve, delay));
         continue;
       }
@@ -42,7 +44,9 @@ async function fetchWithRetry(
       if (response.status >= 500) {
         if (attempt < maxRetries) {
           const delay = initialDelay * Math.pow(2, attempt);
-          console.log(`Server error. Retrying after ${delay}ms...`);
+          if (process.env.NODE_ENV === "development") {
+            console.log(`Server error. Retrying after ${delay}ms...`);
+          }
           await new Promise((resolve) => setTimeout(resolve, delay));
           continue;
         }
@@ -53,7 +57,9 @@ async function fetchWithRetry(
       lastError = error as Error;
       if (attempt < maxRetries) {
         const delay = initialDelay * Math.pow(2, attempt);
-        console.log(`Request failed. Retrying after ${delay}ms...`);
+        if (process.env.NODE_ENV === "development") {
+          console.log(`Request failed. Retrying after ${delay}ms...`);
+        }
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }

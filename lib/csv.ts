@@ -6,6 +6,29 @@ import {
 } from "@/types/spotify";
 
 /**
+ * Sanitize a string to prevent CSV injection attacks
+ * Escapes cells that start with =, +, -, @, or Tab characters
+ */
+function sanitizeCSVField(value: string | number | boolean): string | number | boolean {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  // Check if the string starts with potentially dangerous characters
+  const dangerousChars = ["=", "+", "-", "@", "\t", "\r"];
+  const startsWithDangerousChar = dangerousChars.some((char) =>
+    value.startsWith(char)
+  );
+
+  if (startsWithDangerousChar) {
+    // Prepend with a single quote to neutralize the formula
+    return `'${value}`;
+  }
+
+  return value;
+}
+
+/**
  * Format duration from milliseconds to MM:SS format
  */
 export function formatDuration(durationMs: number): string {
@@ -16,7 +39,7 @@ export function formatDuration(durationMs: number): string {
 }
 
 /**
- * Convert playlist tracks to CSV rows
+ * Convert playlist tracks to CSV rows with sanitization
  */
 export function tracksToCSVRows(
   playlist: SpotifyPlaylist,
@@ -27,20 +50,22 @@ export function tracksToCSVRows(
     .map((item) => {
       const track = item.track;
       return {
-        playlist_id: playlist.id,
-        playlist_name: playlist.name,
-        playlist_owner: playlist.owner.display_name,
+        playlist_id: sanitizeCSVField(playlist.id) as string,
+        playlist_name: sanitizeCSVField(playlist.name) as string,
+        playlist_owner: sanitizeCSVField(playlist.owner.display_name) as string,
         playlist_public: playlist.public,
-        track_name: track.name,
-        artists: track.artists.map((artist) => artist.name).join("; "),
-        album_name: track.album.name,
-        album_release_date: track.album.release_date,
+        track_name: sanitizeCSVField(track.name) as string,
+        artists: sanitizeCSVField(
+          track.artists.map((artist) => artist.name).join("; ")
+        ) as string,
+        album_name: sanitizeCSVField(track.album.name) as string,
+        album_release_date: sanitizeCSVField(track.album.release_date) as string,
         duration_ms: track.duration_ms,
         duration_min: formatDuration(track.duration_ms),
         explicit: track.explicit,
         popularity: track.popularity,
-        added_at: item.added_at,
-        track_uri: track.uri,
+        added_at: sanitizeCSVField(item.added_at) as string,
+        track_uri: sanitizeCSVField(track.uri) as string,
       };
     });
 }

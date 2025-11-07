@@ -1,5 +1,19 @@
 import { DefaultSession } from "next-auth";
 
+// Extended user type for Spotify profile
+export interface SpotifyProfile {
+  id: string;
+  display_name: string;
+  email: string;
+  images?: Array<{
+    url: string;
+    height?: number | null;
+    width?: number | null;
+  }>;
+  country?: string;
+  product?: string;
+}
+
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
@@ -16,7 +30,7 @@ declare module "next-auth/jwt" {
     refreshToken?: string;
     accessTokenExpires?: number;
     error?: string;
-    user?: any;
+    user?: SpotifyProfile;
   }
 }
 

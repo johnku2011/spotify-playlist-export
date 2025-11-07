@@ -44,7 +44,6 @@ export default function Home() {
       }
       
       const data = await response.json();
-      console.log("Playlists fetched:", data.playlists?.length || 0);
       setPlaylists(data.playlists || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to fetch playlists";
