@@ -61,11 +61,20 @@ export const metadata: Metadata = {
     locale: "zh_TW",
     alternateLocale: ["en_US"],
     siteName: "Spotify Playlist Exporter",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Spotify Playlist Exporter - 免費 Spotify 播放清單匯出 CSV 工具",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "免費 Spotify 播放清單匯出 CSV 工具",
     description: "支援匯出喜歡的歌曲、私人播放清單到 CSV/Excel，免費無廣告，可轉移 Apple Music",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
