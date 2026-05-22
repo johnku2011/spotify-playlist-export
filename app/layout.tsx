@@ -13,8 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://spotify-playlist-export-eight.vercel.app";
+
 export const metadata: Metadata = {
-  title: "免費 Spotify 播放清單匯出 CSV 工具 | 備份歌單轉 Apple Music",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "免費 Spotify 播放清單匯出 CSV 工具 | 備份歌單轉 Apple Music",
+    template: "%s | Spotify Playlist Exporter",
+  },
   description: "最好用的 Spotify 匯出工具！支援匯出喜歡的歌曲、私人播放清單到 CSV/Excel，3 步驟完成備份。免費無廣告，可轉移 Apple Music、YouTube Music，含完整曲目資訊（藝人、專輯、發行日期）。不儲存資料，開源安全。Free Spotify playlist export to CSV with complete metadata.",
   keywords: [
     "spotify 播放清單 匯出 csv",
@@ -45,11 +51,13 @@ export const metadata: Metadata = {
     "Liked Songs",
     "音樂分析",
   ],
-  authors: [{ name: "Spotify Playlist Exporter" }],
+  authors: [{ name: "Spotify Playlist Exporter", url: SITE_URL }],
+  creator: "Spotify Playlist Exporter",
   openGraph: {
     title: "免費 Spotify 播放清單匯出 CSV 工具 | 備份歌單轉 Apple Music",
     description: "支援匯出喜歡的歌曲、私人播放清單到 CSV/Excel，免費無廣告，可轉移 Apple Music、YouTube Music。3 步驟完成備份，不儲存任何資料。",
     type: "website",
+    url: SITE_URL,
     locale: "zh_TW",
     alternateLocale: ["en_US"],
     siteName: "Spotify Playlist Exporter",
@@ -71,12 +79,33 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://spotify-playlist-export-eight.vercel.app",
-    languages: {
-      "zh-TW": "https://spotify-playlist-export-eight.vercel.app",
-      "en": "https://spotify-playlist-export-eight.vercel.app",
-    },
+    canonical: SITE_URL,
   },
+};
+
+const webAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Spotify Playlist Exporter",
+  url: SITE_URL,
+  description:
+    "免費 Spotify 播放清單匯出 CSV 工具。支援匯出喜歡的歌曲、私人播放清單到 CSV/Excel，可轉移 Apple Music、YouTube Music。",
+  applicationCategory: "MusicApplication",
+  operatingSystem: "Web",
+  browserRequirements: "Requires JavaScript",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  featureList: [
+    "Export Spotify playlists to CSV",
+    "Export Liked Songs",
+    "Complete track metadata (artist, album, release date, duration, popularity)",
+    "Migrate to Apple Music or YouTube Music",
+    "No data storage, privacy-first",
+  ],
+  inLanguage: ["zh-TW", "en"],
 };
 
 export default function RootLayout({
@@ -89,6 +118,10 @@ export default function RootLayout({
   return (
     <html lang="zh-TW" className="h-full">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
+        />
         {/* Google Analytics 4 */}
         {GA_MEASUREMENT_ID && (
           <>
